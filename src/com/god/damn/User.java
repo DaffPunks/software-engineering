@@ -1,39 +1,49 @@
 package com.god.damn;
 import java.security.SecureRandom;
 import java.math.BigInteger;
-/**
- * Created by 1 on 16.09.2016.
- */
-public class User {
-    public int Id;
-    public String Login;
-    public String Pass;
-    public String Name;
 
-    public User( int id, String login, String pass,String name) {
 
-        Id = id;
-        Login = login;
-        Name = name;
-        // Pass = pass;
+class User {
+    public int      Id;
+    public String   Login;
+    public String   Pass;
+    public String   Name;
+    public String   Salt;
+
+    public User(int id, String name, String login, String pass) {
+        Id      = id;
+        Login   = login;
+        Name    = name;
+
+        //Generate salt
         SecureRandom random = new SecureRandom();
-        String Salt = new BigInteger(130, random).toString(32);
-        Pass=MD5(MD5(pass)+Salt);
+        String salt = new BigInteger(130, random).toString(32);
+
+        Salt = salt;
+        //Make hashed password
+        Pass = MD5(MD5(pass) + salt);
     }
-    private String MD5(String md5) {
+
+    /**
+     *  Encrypt string to MD5 Hash
+     *
+     * @param message That you want to encrypt
+     * @return hash string
+     */
+    public static String MD5(String message) {
         try {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
-            byte[] array = md.digest(md5.getBytes());
+            byte[] array = md.digest(message.getBytes());
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < array.length; ++i) {
                 sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
             }
             return sb.toString();
-        } catch (java.security.NoSuchAlgorithmException e) {
+        }
+        catch (java.security.NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
         return null;
     }
-
-
 
 }
