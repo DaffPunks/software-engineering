@@ -113,7 +113,7 @@ public class Cli {
                 break;
             default:
                 System.err.println("Not enough attributes");
-                System.exit(0);
+                System.exit(6);
         }
 
         currentUser = authentication(login, pass);
@@ -151,7 +151,7 @@ public class Cli {
             System.exit(1);
         }
 
-        String checkHash = User.MD5(User.MD5(password) + user.Salt);
+        String checkHash = Secure.MD5(Secure.MD5(password) + user.Salt);
 
         if( !checkHash.equals(user.Pass) ){
             System.err.println("Wrong password");
