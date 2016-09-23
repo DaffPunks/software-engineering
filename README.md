@@ -1,9 +1,16 @@
 # Software Engineering
 
-### How to execute? 
-In root of source project
+### Build
 ```
-java -cp "libs/commons-cli-1.3.1.jar;out/production/software-engineering" com.god.damn.Main
+$ ./build.sh
+```
+### Run
+```
+$ ./run.sh <args>
+```
+### Test 
+```
+$ ./test.sh
 ```
 -
 ### Help
