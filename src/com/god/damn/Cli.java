@@ -6,6 +6,7 @@ import java.util.*;
 import org.apache.commons.cli.*;
 import org.apache.commons.cli.ParseException;
 
+import static com.god.damn.Secure.MD5;
 
 public class Cli {
     private String[] args = null;
@@ -113,7 +114,7 @@ public class Cli {
                 break;
             default:
                 System.err.println("Not enough attributes");
-                System.exit(6);
+                help();
         }
 
         currentUser = authentication(login, pass);
@@ -151,7 +152,7 @@ public class Cli {
             System.exit(1);
         }
 
-        String checkHash = Secure.MD5(Secure.MD5(password) + user.Salt);
+        String checkHash = MD5(MD5(password) + user.Salt);
 
         if( !checkHash.equals(user.Pass) ){
             System.err.println("Wrong password");
@@ -242,7 +243,7 @@ public class Cli {
         HelpFormatter formater = new HelpFormatter();
 
         formater.printHelp("Main", options);
-        System.exit(6);
+        System.exit(0);
     }
 
 
