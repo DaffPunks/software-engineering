@@ -23,29 +23,24 @@ isSuccessfullTest(){
     fi
 }
 
-#All successful requests
+#Helps
+testing "" 0
+testing "-h" 0
+#Authentication
+testing "-login XXX -pass XXX" 1
+testing "-login jdoe -pass XXX" 2
 testing "-login jdoe -pass sup3rpaZZ" 0
-testing "-login jdoe -pass sup3rpaZZ -res a.b -role 2" 0
-testing "-login jdoe -pass sup3rpaZZ -res a.b -role 2 -ds 12-01-2016 -de 13-01-2016 -val 1" 0
-#Shuffled request
-testing "-pass sup3rpaZZ -ds 12-01-2016 -res a.b -role 2 -val 1 -de 13-01-2016 -login jdoe " 0
-#Incorrect login
-testing "-login logologo -pass somepass" 1
-#Incorrect password
-testing "-login jdoe -pass wrongPass" 2
-#Wrong role
-testing "-login jdoe -pass sup3rpaZZ -role 10 -res a.b" 3
-testing "-login jdoe -pass sup3rpaZZ -role Write -res a.b" 3
-#Access denied
-testing "-login jdoe -pass sup3rpaZZ -res a -role 2" 4
-testing "-login jdoe -pass sup3rpaZZ -res a.b -role 4" 4
-#Incorrect value or date
-testing "-login jdoe -pass sup3rpaZZ -res a.b -role 2 -ds 12-01-2016 -de 13-01-2016 -val One" 5
-testing "-login jdoe -pass sup3rpaZZ -res a.b -role 2 -ds 12_01_2016 -de 13_01_2016 -val 1" 5
-testing "-login jdoe -pass sup3rpaZZ -res a.b -role 2 -ds 12-01-2016 -de 13/01/2016 -val 1" 5
-#Some cases with not enough parameters
-testing "-login jdoe -pass sup3rpaZZ -res a.b -role 2 -ds 12-01-2016 -de 13-01-2016" 0
-testing "-login jdoe -pass sup3rpaZZ -ds 12-01-2016 -de 13-01-2016" 0
+#Authorization
+testing "-login jdoe -pass sup3rpaZZ -role 1 -res a" 0
+testing "-login jdoe -pass sup3rpaZZ -role 1 -res a.b" 0
+testing "-login jdoe -pass sup3rpaZZ -role X -res a.b" 3
+testing "-login jdoe -pass sup3rpaZZ -role 1 -res XXX" 4
+testing "-login jdoe -pass sup3rpaZZ -role 2 -res a" 4
+testing "-login jdoe -pass sup3rpaZZ -role 2 -res a.bc" 4
+#Accounting
+testing "-login jdoe -pass sup3rpaZZ -role 1 -res a.b -ds 12-01-2016 -de 13-01-2016 -val 100" 0
+testing "-login jdoe -pass sup3rpaZZ -role 1 -res a.b -ds 12/01/2016 -de 13/01/2016 -val 100" 5
+testing "-login jdoe -pass sup3rpaZZ -role 1 -res a.b -ds 12-01-2016 -de 13-01-2016 -val XXX" 5
 
 isSuccessfullTest
 
