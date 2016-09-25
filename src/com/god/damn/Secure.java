@@ -29,6 +29,7 @@ public class Secure {
             return sb.toString();
         }
         catch (java.security.NoSuchAlgorithmException e) {
+            System.out.println("Wrong MD5 Hashing");
             e.printStackTrace();
         }
         return null;
