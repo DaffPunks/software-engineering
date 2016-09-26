@@ -18,8 +18,8 @@ public class Secure {
      * @param message That you want to encrypt
      * @return hash string
      */
-    public static String MD5(String message) {
-        try {
+    public static String MD5(String message)throws java.security.NoSuchAlgorithmException {
+         {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
             byte[] array = md.digest(message.getBytes());
             StringBuffer sb = new StringBuffer();
@@ -28,10 +28,6 @@ public class Secure {
             }
             return sb.toString();
         }
-        catch (java.security.NoSuchAlgorithmException e) {
-            System.out.println("Wrong MD5 Hashing");
-            e.printStackTrace();
-        }
-        return null;
+
     }
 }
