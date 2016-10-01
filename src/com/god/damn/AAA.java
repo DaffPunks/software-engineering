@@ -8,26 +8,15 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
-//import static com.god.damn.AAA.Ax3.AUTHENTICATE;
-import static com.god.damn.Permisions.*;
+import static com.god.damn.AAA.Ax3.*;
+import static com.god.damn.Permissions.*;
 import static com.god.damn.Secure.MD5;
-//import static com.god.damn.AAA.ExitCodes.*;
 
-import static jdk.nashorn.tools.Shell.SUCCESS;
 
 public class AAA {
-//    private final int AUTHENTICATE = 1;
-//    private final int AUTHORIZATION = 2;
-//    private final int ACCOUNTING = 3;
-private enum Ax3{AUTHENTICATE, AUTHORIZATION, ACCOUNTING};
+    public enum Ax3{AUTHENTICATE, AUTHORIZATION, ACCOUNTING};
 
-//    private final int SUCCESS = 0;
-//    private final int WRONGLOGIN = 1;
-//    private final int WRONGPASS = 2;
-//    private final int UNKNOWNROLE = 3;
-//    private final int FORBIDDEN = 4;
-//    private final int INCORRECTACTIVITY = 5;
-   private enum ExitCodes{SUCCESS, WRONGLOGIN, WRONGPASS, UNKNOWNROLE, FORBIDDEN, INCORRECTACTIVITY};
+    private enum ExitCodes{SUCCESS, WRONGLOGIN, WRONGPASS, UNKNOWNROLE, FORBIDDEN, INCORRECTACTIVITY};
     //if(*err.*==.SUCCESS) {выходит ехит код и сообщение об ошибке}
 
     private ArrayList<User> UserList;
@@ -43,17 +32,17 @@ private enum Ax3{AUTHENTICATE, AUTHORIZATION, ACCOUNTING};
     }
 
     public void execute(HashMap<String, String> Parameters) {
-        int inputResult = 0;
+        Ax3 inputResult = null;
 
         switch (Parameters.size()) {
             case 2:
-                inputResult = Ax3.AUTHENTICATE.ordinal()+1;
+                inputResult = AUTHENTICATE;
                 break;
             case 4:
-                inputResult = Ax3.AUTHORIZATION.ordinal()+1;
+                inputResult = AUTHORIZATION;
                 break;
             case 7:
-                inputResult = Ax3.ACCOUNTING.ordinal()+1;
+                inputResult = ACCOUNTING;
                 break;
             default: {
                 System.err.println("Wrong Parameters");
@@ -72,14 +61,14 @@ private enum Ax3{AUTHENTICATE, AUTHORIZATION, ACCOUNTING};
 
         try {
             switch (inputResult) {
-                case 1/*Ax3.AUTHENTICATE.ordinal()+1*/:        //а че если сюда тупо числа поставить? или это чему то противоречит?
+                case AUTHENTICATE:        //а че если сюда тупо числа поставить? или это чему то противоречит?
                     authentication(login, pass);
                     break;
-                case 2/*Ax3.AUTHORIZATION.ordinal()+1*/:
+                case AUTHORIZATION:
                     authentication(login, pass);
                     authorization(res, role, currentUser);
                     break;
-                case 3/*Ax3.ACCOUNTING.ordinal()+1*/:   //я мб и мудак, что так сделал, но оно не компилилось
+                case ACCOUNTING:   //я мб и мудак, что так сделал, но оно не компилилось
                     authentication(login, pass);
                     authorization(res, role, currentUser);
                     accounting(ds, de, val, currentRole);
@@ -134,20 +123,27 @@ private enum Ax3{AUTHENTICATE, AUTHORIZATION, ACCOUNTING};
     private void authorization(String res, String role, User user) {
         boolean access = false;
 
-        String read = Integer.toString(READ.code());
-        String write = Integer.toString(WRITE.code());
-        String execute = Integer.toString(EXECUTE.code());
+//        String read = Integer.toString(READ.name());
+//        String write = Integer.toString(WRITE.name());
+//        String execute = Integer.toString(EXECUTE.name());
+//
+//        String[] AvailableRoles = {read, write, execute};
+        ArrayList<String> AvailableRoles = new ArrayList<>();
+        for(Permissions p : Permissions.values()) {
+            AvailableRoles.add(p.name());
+            System.out.println(p.name());
+        }
 
-        String[] AvailableRoles = {read, write, execute};
+
 
         //Role is exist?
-        if (!Arrays.asList(AvailableRoles).contains(role)) {
+        if (!AvailableRoles.contains(role)) {
             System.err.println("Unknown role");
             System.exit(ExitCodes.UNKNOWNROLE.ordinal());
         }
 
         for (Role roles : RoleList)
-            if (roles.User_id == user.Id && roles.Name == Integer.parseInt(role))
+            if (roles.User_id == user.Id && roles.Name.equals(role))
                 if (haveAccess(res, roles.Resource)) {
                     this.currentRole = roles;
                     access = true;
@@ -169,7 +165,7 @@ private enum Ax3{AUTHENTICATE, AUTHORIZATION, ACCOUNTING};
      * @return Accounting
      */
     private void accounting(String ds, String de, String val, Role role) {
-        DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
         Date datestart = null;
         Date dateend = null;
