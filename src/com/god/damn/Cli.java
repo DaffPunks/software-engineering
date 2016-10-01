@@ -82,15 +82,19 @@ public class Cli {
             System.err.println("Failed to parse command line properties");
             help();
         }
-
-        switch (Long.toString(allowInput.toLongArray()[0], 2)){
-            case "11":
-            case "1111":
-            case "1111111":
-                break;
-            default:
-                System.err.println("Not enough attributes");
-                help();
+        try{
+            switch (Long.toString(allowInput.toLongArray()[0], 2)){
+                case "11":
+                case "1111":
+                case "1111111":
+                    break;
+                default:
+                    System.err.println("Not enough attributes");
+                    help();
+            }
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.err.println("No attributes");
+            help();
         }
 
         return Parameters;

@@ -22,7 +22,14 @@ class User {
         Salt = generateSalt();
 
         //Make hashed password
-        Pass = MD5(MD5(pass) + Salt);
+        try{
+            Pass = MD5(MD5(pass) + Salt);
+        }
+        catch (java.security.NoSuchAlgorithmException e) {
+            System.out.println("Wrong MD5 Hashing");
+            e.printStackTrace();
+        }
+
     }
 
 

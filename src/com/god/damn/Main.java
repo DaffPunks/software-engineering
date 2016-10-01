@@ -2,7 +2,7 @@ package com.god.damn;
 
 import java.util.ArrayList;
 
-import static com.god.damn.Permisions.*;
+import static com.god.damn.Permissions.*;
 
 public class Main {
 
@@ -14,10 +14,10 @@ public class Main {
 
         //Test roles data
         ArrayList<Role> RoleList = new ArrayList<>();
-        RoleList.add(new Role(1, 1, READ.code(), "a"));
-        RoleList.add(new Role(2, 1, WRITE.code(), "a.b"));
-        RoleList.add(new Role(3, 2, EXECUTE.code(), "a.b.c"));
-        RoleList.add(new Role(4, 1, EXECUTE.code(), "a.bc"));
+        RoleList.add(new Role(1, 1, READ.name(), "a"));
+        RoleList.add(new Role(2, 1, WRITE.name(), "a.b"));
+        RoleList.add(new Role(3, 2, EXECUTE.name(), "a.b.c"));
+        RoleList.add(new Role(4, 1, EXECUTE.name(), "a.bc"));
 
         new AAA(UserList,RoleList).execute(new Cli(args).parse());
 
