@@ -4,19 +4,21 @@ package com.god.damn;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
 import static com.god.damn.AAA.Ax3.*;
-import static com.god.damn.Permissions.*;
 import static com.god.damn.Secure.MD5;
 
 
 public class AAA {
-    public enum Ax3{AUTHENTICATE, AUTHORIZATION, ACCOUNTING};
+    public enum Ax3 {AUTHENTICATE, AUTHORIZATION, ACCOUNTING}
 
-    private enum ExitCodes{SUCCESS, WRONGLOGIN, WRONGPASS, UNKNOWNROLE, FORBIDDEN, INCORRECTACTIVITY};
+    ;
+
+    private enum ExitCodes {SUCCESS, WRONGLOGIN, WRONGPASS, UNKNOWNROLE, FORBIDDEN, INCORRECTACTIVITY}
+
+    ;
 
     private ArrayList<User> UserList;
     private ArrayList<Role> RoleList;
@@ -73,7 +75,7 @@ public class AAA {
                     accounting(ds, de, val, currentRole);
                     break;
             }
-        }catch(java.security.NoSuchAlgorithmException e) {
+        } catch (java.security.NoSuchAlgorithmException e) {
             System.out.println("Wrong MD5 Hashing");
             e.printStackTrace();
         }
@@ -123,7 +125,7 @@ public class AAA {
         boolean access = false;
 
         ArrayList<String> AvailableRoles = new ArrayList<>();
-        for(Permissions p : Permissions.values()) {
+        for (Permissions p : Permissions.values()) {
             AvailableRoles.add(p.name());
             System.out.println(p.name());
         }

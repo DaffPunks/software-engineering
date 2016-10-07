@@ -1,9 +1,9 @@
 package com.god.damn;
 
-import java.util.*;
-
 import org.apache.commons.cli.*;
-import org.apache.commons.cli.ParseException;
+
+import java.util.BitSet;
+import java.util.HashMap;
 
 
 public class Cli {
@@ -36,7 +36,7 @@ public class Cli {
         try {
             cmd = parser.parse(options, args);
 
-            if (cmd.hasOption("h")){
+            if (cmd.hasOption("h")) {
                 help();
             }
 
@@ -75,13 +75,12 @@ public class Cli {
                 Parameters.put("val", cmd.getOptionValue("val"));
             }
 
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             System.err.println("Failed to parse command line properties");
             help();
         }
-        try{
-            switch (Long.toString(allowInput.toLongArray()[0], 2)){
+        try {
+            switch (Long.toString(allowInput.toLongArray()[0], 2)) {
                 case "11":
                 case "1111":
                 case "1111111":
@@ -90,7 +89,7 @@ public class Cli {
                     System.err.println("Not enough attributes");
                     help();
             }
-        }catch(ArrayIndexOutOfBoundsException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
             System.err.println("No attributes");
             help();
         }
