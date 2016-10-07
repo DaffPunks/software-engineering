@@ -17,7 +17,6 @@ public class AAA {
     public enum Ax3{AUTHENTICATE, AUTHORIZATION, ACCOUNTING};
 
     private enum ExitCodes{SUCCESS, WRONGLOGIN, WRONGPASS, UNKNOWNROLE, FORBIDDEN, INCORRECTACTIVITY};
-    //if(*err.*==.SUCCESS) {выходит ехит код и сообщение об ошибке}
 
     private ArrayList<User> UserList;
     private ArrayList<Role> RoleList;
@@ -61,14 +60,14 @@ public class AAA {
 
         try {
             switch (inputResult) {
-                case AUTHENTICATE:        //а че если сюда тупо числа поставить? или это чему то противоречит?
+                case AUTHENTICATE:
                     authentication(login, pass);
                     break;
                 case AUTHORIZATION:
                     authentication(login, pass);
                     authorization(res, role, currentUser);
                     break;
-                case ACCOUNTING:   //я мб и мудак, что так сделал, но оно не компилилось
+                case ACCOUNTING:
                     authentication(login, pass);
                     authorization(res, role, currentUser);
                     accounting(ds, de, val, currentRole);
@@ -123,18 +122,11 @@ public class AAA {
     private void authorization(String res, String role, User user) {
         boolean access = false;
 
-//        String read = Integer.toString(READ.name());
-//        String write = Integer.toString(WRITE.name());
-//        String execute = Integer.toString(EXECUTE.name());
-//
-//        String[] AvailableRoles = {read, write, execute};
         ArrayList<String> AvailableRoles = new ArrayList<>();
         for(Permissions p : Permissions.values()) {
             AvailableRoles.add(p.name());
             System.out.println(p.name());
         }
-
-
 
         //Role is exist?
         if (!AvailableRoles.contains(role)) {
@@ -142,12 +134,14 @@ public class AAA {
             System.exit(ExitCodes.UNKNOWNROLE.ordinal());
         }
 
-        for (Role roles : RoleList)
-            if (roles.User_id == user.Id && roles.Name.equals(role))
+        for (Role roles : RoleList) {
+            if (roles.User_id == user.Id && roles.Name.equals(role)) {
                 if (haveAccess(res, roles.Resource)) {
                     this.currentRole = roles;
                     access = true;
                 }
+            }
+        }
 
         if (!access) {
             System.err.println("Access denied.");

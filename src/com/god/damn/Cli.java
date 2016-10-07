@@ -1,12 +1,10 @@
 package com.god.damn;
 
-import java.text.*;
 import java.util.*;
 
 import org.apache.commons.cli.*;
 import org.apache.commons.cli.ParseException;
 
-import static com.god.damn.Secure.MD5;
 
 public class Cli {
     private String[] args = null;
