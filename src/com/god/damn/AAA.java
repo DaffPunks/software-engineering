@@ -14,11 +14,7 @@ import static com.god.damn.Secure.MD5;
 public class AAA {
     public enum Ax3 {AUTHENTICATE, AUTHORIZATION, ACCOUNTING}
 
-    ;
-
     private enum ExitCodes {SUCCESS, WRONGLOGIN, WRONGPASS, UNKNOWNROLE, FORBIDDEN, INCORRECTACTIVITY}
-
-    ;
 
     private ArrayList<User> UserList;
     private ArrayList<Role> RoleList;
@@ -83,10 +79,6 @@ public class AAA {
 
     /**
      * Authenticate user in system
-     *
-     * @param login
-     * @param password
-     * @return User
      */
     private void authentication(String login, String password) throws java.security.NoSuchAlgorithmException {
         boolean finded = false;
@@ -115,11 +107,6 @@ public class AAA {
 
     /**
      * Authorize User in system
-     *
-     * @param res  resource
-     * @param role role
-     * @param user User, who trying authorize in system
-     * @return Role
      */
     private void authorization(String res, String role, User user) {
         boolean access = false;
@@ -153,12 +140,6 @@ public class AAA {
 
     /**
      * Conduct accounting
-     *
-     * @param ds   Date Start
-     * @param de   Date End
-     * @param val  Value of resource
-     * @param role Role, who accounting in system
-     * @return Accounting
      */
     private void accounting(String ds, String de, String val, Role role) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -191,10 +172,6 @@ public class AAA {
 
     /**
      * Check, have calling Role access to requested resource
-     *
-     * @param requestResource
-     * @param roleResource
-     * @return bool
      */
     private boolean haveAccess(String requestResource, String roleResource) {
         if (requestResource.regionMatches(0, roleResource, 0, roleResource.length())) {     //equals begin of requestRsrc with whole roleRsrc

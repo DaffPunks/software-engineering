@@ -30,7 +30,7 @@ public class Cli {
 
         HashMap<String, String> Parameters = new HashMap<>();
 
-        CommandLineParser parser = new BasicParser();
+        CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
 
         try {
