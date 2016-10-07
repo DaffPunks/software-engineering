@@ -14,14 +14,14 @@ public class Cli {
 
         this.args = args;
 
-        options.addOption("h", "help", false, "show help.");
-        options.addOption("login", "login", true, "your login.");
-        options.addOption("pass", "password", true, "your password.");
-        options.addOption("res", "resource", true, "Requested resource.");
-        options.addOption("role", "role", true, "What you what to do with this resource.");
-        options.addOption("ds", "datestart", true, "Using start date. [DD-MM-YYYY]");
-        options.addOption("de", "dateend", true, "Using end date. [DD-MM-YYYY]");
-        options.addOption("val", "value", true, "Value");
+        options.addOption("h", "help", false, "show help.")
+                .addOption("login", "login", true, "your login.")
+                .addOption("pass", "password", true, "your password.")
+                .addOption("res", "resource", true, "Requested resource.")
+                .addOption("role", "role", true, "What you what to do with this resource.")
+                .addOption("ds", "datestart", true, "Using start date. [DD-MM-YYYY]")
+                .addOption("de", "dateend", true, "Using end date. [DD-MM-YYYY]")
+                .addOption("val", "value", true, "Value");
 
     }
 
