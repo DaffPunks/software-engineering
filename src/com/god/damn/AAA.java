@@ -4,20 +4,17 @@ package com.god.damn;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
 import static com.god.damn.AAA.Ax3.*;
-import static com.god.damn.Permissions.*;
 import static com.god.damn.Secure.MD5;
 
 
 public class AAA {
-    public enum Ax3{AUTHENTICATE, AUTHORIZATION, ACCOUNTING};
+    public enum Ax3 {AUTHENTICATE, AUTHORIZATION, ACCOUNTING}
 
-    private enum ExitCodes{SUCCESS, WRONGLOGIN, WRONGPASS, UNKNOWNROLE, FORBIDDEN, INCORRECTACTIVITY};
-    //if(*err.*==.SUCCESS) {выходит ехит код и сообщение об ошибке}
+    private enum ExitCodes {SUCCESS, WRONGLOGIN, WRONGPASS, UNKNOWNROLE, FORBIDDEN, INCORRECTACTIVITY}
 
     private ArrayList<User> UserList;
     private ArrayList<Role> RoleList;
@@ -61,20 +58,20 @@ public class AAA {
 
         try {
             switch (inputResult) {
-                case AUTHENTICATE:        //а че если сюда тупо числа поставить? или это чему то противоречит?
+                case AUTHENTICATE:
                     authentication(login, pass);
                     break;
                 case AUTHORIZATION:
                     authentication(login, pass);
                     authorization(res, role, currentUser);
                     break;
-                case ACCOUNTING:   //я мб и мудак, что так сделал, но оно не компилилось
+                case ACCOUNTING:
                     authentication(login, pass);
                     authorization(res, role, currentUser);
                     accounting(ds, de, val, currentRole);
                     break;
             }
-        }catch(java.security.NoSuchAlgorithmException e) {
+        } catch (java.security.NoSuchAlgorithmException e) {
             System.out.println("Wrong MD5 Hashing");
             e.printStackTrace();
         }
@@ -82,10 +79,6 @@ public class AAA {
 
     /**
      * Authenticate user in system
-     *
-     * @param login
-     * @param password
-     * @return User
      */
     private void authentication(String login, String password) throws java.security.NoSuchAlgorithmException {
         boolean finded = false;
@@ -114,27 +107,15 @@ public class AAA {
 
     /**
      * Authorize User in system
-     *
-     * @param res  resource
-     * @param role role
-     * @param user User, who trying authorize in system
-     * @return Role
      */
     private void authorization(String res, String role, User user) {
         boolean access = false;
 
-//        String read = Integer.toString(READ.name());
-//        String write = Integer.toString(WRITE.name());
-//        String execute = Integer.toString(EXECUTE.name());
-//
-//        String[] AvailableRoles = {read, write, execute};
         ArrayList<String> AvailableRoles = new ArrayList<>();
-        for(Permissions p : Permissions.values()) {
+        for (Permissions p : Permissions.values()) {
             AvailableRoles.add(p.name());
             System.out.println(p.name());
         }
-
-
 
         //Role is exist?
         if (!AvailableRoles.contains(role)) {
@@ -142,12 +123,14 @@ public class AAA {
             System.exit(ExitCodes.UNKNOWNROLE.ordinal());
         }
 
-        for (Role roles : RoleList)
-            if (roles.User_id == user.Id && roles.Name.equals(role))
+        for (Role roles : RoleList) {
+            if (roles.User_id == user.Id && roles.Name.equals(role)) {
                 if (haveAccess(res, roles.Resource)) {
                     this.currentRole = roles;
                     access = true;
                 }
+            }
+        }
 
         if (!access) {
             System.err.println("Access denied.");
@@ -157,12 +140,6 @@ public class AAA {
 
     /**
      * Conduct accounting
-     *
-     * @param ds   Date Start
-     * @param de   Date End
-     * @param val  Value of resource
-     * @param role Role, who accounting in system
-     * @return Accounting
      */
     private void accounting(String ds, String de, String val, Role role) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -195,10 +172,6 @@ public class AAA {
 
     /**
      * Check, have calling Role access to requested resource
-     *
-     * @param requestResource
-     * @param roleResource
-     * @return bool
      */
     private boolean haveAccess(String requestResource, String roleResource) {
         if (requestResource.regionMatches(0, roleResource, 0, roleResource.length())) {     //equals begin of requestRsrc with whole roleRsrc

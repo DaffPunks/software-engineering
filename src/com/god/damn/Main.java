@@ -1,16 +1,24 @@
 package com.god.damn;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import static com.god.damn.Permissions.*;
+import static com.god.damn.Secure.*;
 
 public class Main {
 
     public static void main(String[] args) {
         //Test users data
         ArrayList<User> UserList = new ArrayList<>();
-        UserList.add(new User(1, "John Doe", "jdoe", "sup3rpaZZ"));
-        UserList.add(new User(2, "Jane Row", "jrow", "Qweqrty12"));
+        try {
+            String salt = generateSalt();
+            UserList.add(new User(1, "jdoe", MD5(MD5("sup3rpaZZ") + salt), "John Doe", salt));
+            salt = generateSalt();
+            UserList.add(new User(2, "jrow", MD5(MD5("Qweqrty12") + salt), "Jane Row", salt));
+        } catch (NoSuchAlgorithmException e){
+            System.err.println("Get MD5 Hash failed");
+        }
 
         //Test roles data
         ArrayList<Role> RoleList = new ArrayList<>();
