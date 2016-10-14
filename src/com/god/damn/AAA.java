@@ -3,6 +3,8 @@ package com.god.damn;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,16 +18,13 @@ public class AAA {
 
     private enum ExitCodes {SUCCESS, WRONGLOGIN, WRONGPASS, UNKNOWNROLE, FORBIDDEN, INCORRECTACTIVITY}
 
-    private ArrayList<User> UserList;
-    private ArrayList<Role> RoleList;
+    private DatabaseManager databaseManager;
 
-    private User currentUser;
-    private Role currentRole;
-    private Accounting currentAccount;
+    private int currentUserID;
+    private int currentRoleID;
 
-    public AAA(ArrayList<User> UserList, ArrayList<Role> RoleList) {
-        this.UserList = UserList;
-        this.RoleList = RoleList;
+    public AAA(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
     }
 
     public void execute(HashMap<String, String> Parameters) {
@@ -43,7 +42,6 @@ public class AAA {
                 break;
             default: {
                 System.err.println("Wrong Parameters");
-                //final int EC = SUCCESS.ordinal();
                 System.exit(ExitCodes.SUCCESS.ordinal());
             }
         }
@@ -63,12 +61,12 @@ public class AAA {
                     break;
                 case AUTHORIZATION:
                     authentication(login, pass);
-                    authorization(res, role, currentUser);
+                    authorization(res, role);
                     break;
                 case ACCOUNTING:
                     authentication(login, pass);
-                    authorization(res, role, currentUser);
-                    accounting(ds, de, val, currentRole);
+                    authorization(res, role);
+                    accounting(ds, de, val);
                     break;
             }
         } catch (java.security.NoSuchAlgorithmException e) {
@@ -81,17 +79,9 @@ public class AAA {
      * Authenticate user in system
      */
     private void authentication(String login, String password) throws java.security.NoSuchAlgorithmException {
-        boolean finded = false;
-        User user = null;
+        User user = databaseManager.getUser(login);
 
-        for (int i = 0; i < UserList.size() && !finded; i++) {
-            if (UserList.get(i).Login.equals(login)) {
-                finded = true;
-                user = UserList.get(i);
-            }
-        }
-
-        if (!finded) {
+        if (user == null) {
             System.err.println("Unknown login");
             System.exit(ExitCodes.WRONGLOGIN.ordinal());
         }
@@ -102,19 +92,18 @@ public class AAA {
             System.err.println("Wrong password");
             System.exit(ExitCodes.WRONGPASS.ordinal());
         }
-        this.currentUser = user;
+        this.currentUserID = user.Id;
     }
 
     /**
      * Authorize User in system
      */
-    private void authorization(String res, String role, User user) {
+    private void authorization(String res, String role) {
         boolean access = false;
 
         ArrayList<String> AvailableRoles = new ArrayList<>();
         for (Permissions p : Permissions.values()) {
             AvailableRoles.add(p.name());
-            System.out.println(p.name());
         }
 
         //Role is exist?
@@ -123,10 +112,12 @@ public class AAA {
             System.exit(ExitCodes.UNKNOWNROLE.ordinal());
         }
 
-        for (Role roles : RoleList) {
-            if (roles.User_id == user.Id && roles.Name.equals(role)) {
-                if (haveAccess(res, roles.Resource)) {
-                    this.currentRole = roles;
+        ArrayList<Role> roleList = databaseManager.getRoleList(currentUserID);
+
+        for (Role userRole : roleList) {
+            if (userRole.Name.equals(role)) {
+                if (haveAccess(res, userRole.Resource)) {
+                    this.currentRoleID = userRole.Id;
                     access = true;
                 }
             }
@@ -141,18 +132,21 @@ public class AAA {
     /**
      * Conduct accounting
      */
-    private void accounting(String ds, String de, String val, Role role) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    private void accounting(String ds, String de, String val) {
+        //TODO: Refactor date
 
-        Date datestart = null;
-        Date dateend = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        LocalDate dateStart = null;
+        LocalDate dateEnd = null;
+
         int value = 0;
 
         try {
-            datestart = format.parse(ds);
-            dateend = format.parse(de);
-        } catch (java.text.ParseException e) {
-            System.out.println("Incorrect activity (invalid date)");
+            dateStart = LocalDate.parse(ds, formatter);
+            dateEnd = LocalDate.parse(de, formatter);
+        } catch (java.time.format.DateTimeParseException e) {
+            System.out.println("Incorrect activity (invalid date)" + e);
             System.exit(ExitCodes.INCORRECTACTIVITY.ordinal());
         }
 
@@ -163,11 +157,8 @@ public class AAA {
             System.exit(ExitCodes.INCORRECTACTIVITY.ordinal());
         }
 
-        currentAccount = new Accounting(role.Id, value, datestart, dateend);
-    }
+        databaseManager.insertAccountingData(new Accounting(currentRoleID, value, dateStart, dateEnd));
 
-    public Accounting getCurrentAccount() {
-        return currentAccount;
     }
 
     /**

@@ -1,6 +1,9 @@
 package com.god.damn;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import static com.god.damn.Permissions.*;
@@ -10,6 +13,7 @@ public class Main {
 
     public static void main(String[] args) {
         //Test users data
+        /*
         ArrayList<User> UserList = new ArrayList<>();
         try {
             String salt = generateSalt();
@@ -28,6 +32,18 @@ public class Main {
         RoleList.add(new Role(4, 1, EXECUTE.name(), "a.bc"));
 
         new AAA(UserList,RoleList).execute(new Cli(args).parse());
+        */
+
+        String str = "1986-04-08";
+
+        //LocalDate dateTime = LocalDate.parse(str, formatter);
+
+
+        LocalDate today = LocalDate.now();
+        //System.out.println(dateTime);
+
+        H2DataBaseManager dbm = new H2DataBaseManager("jdbc:h2:file:./db/SE", "sa", "");
+        new AAA(dbm).execute(new Cli(args).parse());
 
         System.out.println("Success");
         System.exit(0);
