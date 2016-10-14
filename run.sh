@@ -1,3 +1,26 @@
 #!/usr/bin/env bash
 
-java -cp "libs/commons-cli-1.3.1.jar;libs/flyway-core-4.0.3.jar;libs/h2-1.4.192.jar;out" com.god.damn.Main $*
+LIB="libs/*"
+OUT_JAR="aaa.jar"
+
+if [[ "$OSTYPE" == "linux" ]]; then
+        CP="$LIB:$OUT_JAR"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+        # Mac OSX
+        CP="$LIB:$OUT_JAR"
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+        # POSIX compatibility layer and Linux environment emulation for Windows
+        CP="$LIB;$OUT_JAR"
+elif [[ "$OSTYPE" == "msys" ]]; then
+        # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+        CP="$LIB;$OUT_JAR"
+elif [[ "$OSTYPE" == "win32" ]]; then
+        # I'm not sure this can happen.
+        CP="$LIB;$OUT_JAR"
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+        CP="$LIB:$OUT_JAR"
+else
+        CP="$LIB:$OUT_JAR"
+fi
+
+java -cp $CP com.god.damn.Main $*
