@@ -1,12 +1,9 @@
 package com.god.damn;
 
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import static com.god.damn.AAA.Ax3.*;
@@ -73,6 +70,9 @@ public class AAA {
             System.out.println("Wrong MD5 Hashing");
             e.printStackTrace();
         }
+
+        System.out.println("Success");
+        System.exit(0);
     }
 
     /**
@@ -133,7 +133,6 @@ public class AAA {
      * Conduct accounting
      */
     private void accounting(String ds, String de, String val) {
-        //TODO: Refactor date
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 

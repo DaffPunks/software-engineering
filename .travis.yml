@@ -1,0 +1,7 @@
+language: bash
+
+before_script:
+    - bash build.sh
+
+script:
+    - bash test.sh

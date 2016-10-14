@@ -4,7 +4,6 @@ import org.flywaydb.core.Flyway;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import static com.god.damn.Secure.MD5;
@@ -244,9 +243,6 @@ class H2DataBaseManager implements DatabaseManager {
 
     @Override
     public void insertAccountingData(Accounting accounting) {
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        //String DS = accounting.Date_st.format(formatter);
-        //String DE = accounting.Date_end.format(formatter);
 
         try {
             conn = DriverManager.getConnection(this.connection, this.user, this.pass);
