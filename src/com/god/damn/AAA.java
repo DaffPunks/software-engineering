@@ -1,6 +1,9 @@
 package com.god.damn;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -11,6 +14,9 @@ import static com.god.damn.Secure.MD5;
 
 
 public class AAA {
+
+    Logger log = LogManager.getLogger(AAA.class.getName());
+
     public enum Ax3 {AUTHENTICATE, AUTHORIZATION, ACCOUNTING}
 
     private enum ExitCodes {SUCCESS, WRONGLOGIN, WRONGPASS, UNKNOWNROLE, FORBIDDEN, INCORRECTACTIVITY}
@@ -39,6 +45,7 @@ public class AAA {
                 break;
             default: {
                 System.err.println("Wrong Parameters");
+                log.error("Wrong Parameters: " + Parameters.size());
                 System.exit(ExitCodes.SUCCESS.ordinal());
             }
         }
@@ -68,10 +75,20 @@ public class AAA {
             }
         } catch (java.security.NoSuchAlgorithmException e) {
             System.out.println("Wrong MD5 Hashing");
+            log.error("Wrong MD5 Hashing");
             e.printStackTrace();
         }
 
         System.out.println("Success");
+        log.info("Success:" +
+                " Login: "  + login +
+                " Pass: "   + pass +
+                " Res: "    + res +
+                " Role: "   + role +
+                " Ds: "     + ds +
+                " De: "     + de +
+                " Val: "      + val
+        );
         System.exit(0);
     }
 
@@ -82,7 +99,8 @@ public class AAA {
         User user = databaseManager.getUser(login);
 
         if (user == null) {
-            System.err.println("Unknown login");
+            System.err.println("Unknown login " + login);
+            log.error("Unknown login " + login);
             System.exit(ExitCodes.WRONGLOGIN.ordinal());
         }
 
@@ -90,6 +108,7 @@ public class AAA {
 
         if (!checkHash.equals(user.Pass)) {
             System.err.println("Wrong password");
+            log.error("Wrong password " + login + " Pass: " + password);
             System.exit(ExitCodes.WRONGPASS.ordinal());
         }
         this.currentUserID = user.Id;
@@ -109,6 +128,7 @@ public class AAA {
         //Role is exist?
         if (!AvailableRoles.contains(role)) {
             System.err.println("Unknown role");
+            log.error("Unknown role: " + role);
             System.exit(ExitCodes.UNKNOWNROLE.ordinal());
         }
 
@@ -125,6 +145,7 @@ public class AAA {
 
         if (!access) {
             System.err.println("Access denied.");
+            log.error("Access denied.");
             System.exit(ExitCodes.FORBIDDEN.ordinal());
         }
     }
@@ -146,6 +167,7 @@ public class AAA {
             dateEnd = LocalDate.parse(de, formatter);
         } catch (java.time.format.DateTimeParseException e) {
             System.out.println("Incorrect activity (invalid date)" + e);
+            log.error("Incorrect activity (invalid date) startdate: " + ds + " enddate: " + de);
             System.exit(ExitCodes.INCORRECTACTIVITY.ordinal());
         }
 
@@ -153,6 +175,7 @@ public class AAA {
             value = Integer.parseInt(val);
         } catch (java.lang.NumberFormatException e) {
             System.out.println("Incorrect activity (invalid value)");
+            log.error("Incorrect activity (invalid value): " + val);
             System.exit(ExitCodes.INCORRECTACTIVITY.ordinal());
         }
 
