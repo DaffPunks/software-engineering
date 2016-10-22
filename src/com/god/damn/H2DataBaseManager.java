@@ -1,5 +1,7 @@
 package com.god.damn;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.flywaydb.core.Flyway;
 
 import java.security.NoSuchAlgorithmException;
@@ -11,6 +13,10 @@ import static com.god.damn.Secure.generateSalt;
 
 
 class H2DataBaseManager implements DatabaseManager {
+
+    Logger log = LogManager.getLogger(H2DataBaseManager.class.getName());
+
+
     private Connection conn;
 
     private String connection;
@@ -26,6 +32,7 @@ class H2DataBaseManager implements DatabaseManager {
             Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
             System.err.println("H2 Driver not found: " + e);
+            log.error("H2 Driver not found: " + e);
         }
 
         Flyway flyway = new Flyway();
@@ -63,6 +70,8 @@ class H2DataBaseManager implements DatabaseManager {
 
         } catch (SQLException e) {
             System.err.println("SQL Exception: " + e);
+            log.error("SQL Exception: " + e);
+
         }
         return null;
 
@@ -97,6 +106,7 @@ class H2DataBaseManager implements DatabaseManager {
 
         } catch (SQLException e) {
             System.err.println("SQL Exception: " + e);
+            log.error("SQL Exception: " + e);
         }
         return null;
     }
@@ -129,6 +139,7 @@ class H2DataBaseManager implements DatabaseManager {
 
         } catch (SQLException e) {
             System.err.println("SQL Exception: " + e);
+            log.error("SQL Exception" + e);
         }
         return null;
     }
@@ -162,6 +173,7 @@ class H2DataBaseManager implements DatabaseManager {
 
         } catch (SQLException e) {
             System.err.println("SQL Exception: " + e);
+            log.error("SQL Exception: " + e);
         }
         return null;
     }
@@ -195,6 +207,7 @@ class H2DataBaseManager implements DatabaseManager {
 
         } catch (SQLException e) {
             System.err.println("SQL Exception: " + e);
+            log.error("SQL Exception: " + e);
         }
         return null;
     }
@@ -215,6 +228,7 @@ class H2DataBaseManager implements DatabaseManager {
             conn.close();
         } catch (SQLException e) {
             System.err.println("SQL Exception: " + e);
+            log.error("SQL Exception: " + e);
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
             System.err.println("MD5 Exception: " + e);
@@ -237,6 +251,7 @@ class H2DataBaseManager implements DatabaseManager {
             conn.close();
         } catch (SQLException e) {
             System.err.println("SQL Exception: " + e);
+            log.error("SQL Exception: " + e);
             e.printStackTrace();
         }
     }
@@ -258,6 +273,7 @@ class H2DataBaseManager implements DatabaseManager {
             conn.close();
         } catch (SQLException e) {
             System.err.println("SQL Exception: " + e);
+            log.error("SQL Exception: " + e);
             e.printStackTrace();
         }
     }

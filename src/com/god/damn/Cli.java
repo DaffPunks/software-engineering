@@ -1,12 +1,18 @@
 package com.god.damn;
 
 import org.apache.commons.cli.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.BitSet;
 import java.util.HashMap;
 
 
 public class Cli {
+
+    Logger log = LogManager.getLogger(Cli.class.getName());
+
+
     private String[] args = null;
     private Options options = new Options();
 
@@ -77,6 +83,7 @@ public class Cli {
 
         } catch (ParseException e) {
             System.err.println("Failed to parse command line properties");
+            log.error("Failed to parse command line properties");
             help();
         }
         try {
@@ -87,10 +94,12 @@ public class Cli {
                     break;
                 default:
                     System.err.println("Not enough attributes");
+                    log.error("Not enough attributes");
                     help();
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.err.println("No attributes");
+            log.error("No attributes");
             help();
         }
 
