@@ -42,51 +42,26 @@ class H2DataBaseManager implements DatabaseManager {
 
     @Override
     public User getUser(String login) {
-
-        String getUser = "SELECT * FROM USERS WHERE LOGIN = '" + login + "';";
-        User user;
-
-        try {
-            conn = DriverManager.getConnection(this.connection, this.user, this.pass);
-
-            Statement st = conn.createStatement();
-            ResultSet resultSet = st.executeQuery(getUser);
-
-            if (!resultSet.isBeforeFirst()) {
-                return null;
-            } else {
-                resultSet.first();
-                user = new User(
-                        resultSet.getInt("ID"),
-                        resultSet.getString("LOGIN"),
-                        resultSet.getString("PASS"),
-                        resultSet.getString("NAME"),
-                        resultSet.getString("SALT")
-                );
-            }
-
-            conn.close();
-            return user;
-
-        } catch (SQLException e) {
-            System.err.println("SQL Exception: " + e);
-            log.error("SQL Exception: " + e);
-
-        }
-        return null;
-
+        String getUser = "SELECT * FROM USERS WHERE LOGIN = ?";
+        return getUserQuery(getUser, login);
     }
 
     @Override
     public User getUser(int id) {
-        String getUser = "SELECT * FROM USERS WHERE LOGIN = " + id;
+        String getUser = "SELECT * FROM USERS WHERE ID = ?";
+        return getUserQuery(getUser, Integer.toString(id) );
+    }
+
+    private User getUserQuery(String query, String index){
+
         User user;
 
         try {
             conn = DriverManager.getConnection(this.connection, this.user, this.pass);
 
-            Statement st = conn.createStatement();
-            ResultSet resultSet = st.executeQuery(getUser);
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setString(1, index);
+            ResultSet resultSet = st.executeQuery();
 
             if (!resultSet.isBeforeFirst()) {
                 return null;
@@ -146,48 +121,25 @@ class H2DataBaseManager implements DatabaseManager {
 
     @Override
     public ArrayList<Role> getRoleList(int id) {
-        String getRoles = "SELECT * FROM ROLES WHERE USER_ID = " + id;
-        ArrayList<Role> list = new ArrayList<>();
-
-        try {
-            conn = DriverManager.getConnection(this.connection, this.user, this.pass);
-
-            Statement st = conn.createStatement();
-            ResultSet resultSet = st.executeQuery(getRoles);
-
-            if (!resultSet.isBeforeFirst()) {
-                return null;
-            } else {
-                while (resultSet.next()) {
-                    list.add(new Role(
-                            resultSet.getInt("ID"),
-                            resultSet.getInt("USER_ID"),
-                            resultSet.getString("PERMISSION"),
-                            resultSet.getString("RESOURCE")
-                    ));
-                }
-            }
-
-            conn.close();
-            return list;
-
-        } catch (SQLException e) {
-            System.err.println("SQL Exception: " + e);
-            log.error("SQL Exception: " + e);
-        }
-        return null;
+        String getRoles = "SELECT * FROM ROLES WHERE USER_ID = ?";
+        return getRoleListQuery(getRoles, Integer.toString(id));
     }
 
     @Override
     public ArrayList<Role> getRoleList() {
         String getRoles = "SELECT * FROM ROLES";
+        return getRoleListQuery(getRoles, null);
+    }
+
+    private ArrayList<Role> getRoleListQuery(String query, String index) {
         ArrayList<Role> list = new ArrayList<>();
 
         try {
             conn = DriverManager.getConnection(this.connection, this.user, this.pass);
 
-            Statement st = conn.createStatement();
-            ResultSet resultSet = st.executeQuery(getRoles);
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setString(1, index);
+            ResultSet resultSet = st.executeQuery();
 
             if (!resultSet.isBeforeFirst()) {
                 return null;
